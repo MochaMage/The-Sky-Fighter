@@ -8,4 +8,6 @@ for more interesting enemies. Some more features I'd like to add are
 multiple player support, controller support, and eventually, a mobile
 version for Android or iOs.
 
+[Last video of progress on game](https://www.youtube.com/watch?v=Grl4BFD5slI)
+
 _Created in GameMaker Studio 1.4_
