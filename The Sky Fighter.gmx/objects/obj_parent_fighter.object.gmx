@@ -108,6 +108,21 @@ enum state {normal, outside, chasing, scanning};
     exit;
 }
 
+if(turn_ratio &gt; 0)
+{
+    if(turn_angle &lt; turn_ratio * max_turn_angle){
+        turn_angle += turn_increment;}
+}
+else if(turn_ratio &lt; 0)
+{
+    if(turn_angle &gt; turn_ratio * max_turn_angle){
+        turn_angle -= turn_increment;}
+}
+else if(turn_angle != 0){
+    turn_angle -= (abs(turn_angle)/turn_angle) * turn_decrement;}
+
+direction += turn_angle;
+
 if(!afterburner &amp;&amp; speed &gt; default_speed)
     {speed -= afterburner_decrement;}
     

@@ -28,7 +28,7 @@
             <string>scr_resize_window();
 display_set_gui_size(view_wview[0], view_hview[0]);
 
-room_goto(r_main_menu);
+room_goto(test_flight_range);
 </string>
           </argument>
         </arguments>
