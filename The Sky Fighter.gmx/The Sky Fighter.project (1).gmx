@@ -7,11 +7,7 @@
     <extension index="0">extensions\Draw Sprite Shadow</extension>
     <extension index="1">extensions\Input Dog</extension>
   </NewExtensions>
-  <sounds name="sound">
-    <sound>sound\snd_transition</sound>
-    <sound>sound\snd_player_cruising</sound>
-    <sound>sound\music_test</sound>
-  </sounds>
+  <sounds name="sound"/>
   <sprites name="sprites">
     <sprites name="Weapons">
       <sprites name="Player Weapons">
@@ -36,8 +32,6 @@
       <sprite>sprites\spr_fighter_explosion</sprite>
       <sprite>sprites\spr_bullet_impact</sprite>
       <sprite>sprites\spr_player_missile_reticle</sprite>
-      <sprite>sprites\spr_white_clouds</sprite>
-      <sprite>sprites\spr_dark_clouds</sprite>
     </sprites>
     <sprites name="UI">
       <sprite>sprites\spr_heart</sprite>
@@ -55,8 +49,6 @@
       <sprite>sprites\sFatButton_new</sprite>
       <sprite>sprites\sThinButton_new</sprite>
     </sprites>
-    <sprite>sprites\mask_location</sprite>
-    <sprite>sprites\mask_collidable</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_desert1</background>
@@ -80,11 +72,8 @@
       <script>scripts\scr_draw_player_gun_bar.gml</script>
       <script>scripts\scr_draw_player_speed.gml</script>
       <script>scripts\scr_resize_window.gml</script>
-      <script>scripts\scr_draw_player_score.gml</script>
-      <script>scripts\scr_get_fighters.gml</script>
-      <script>scripts\scr_draw_objectives.gml</script>
-      <script>scripts\objective_to_text.gml</script>
     </scripts>
+    <script>scripts\scr_get_fighters.gml</script>
     <scripts name="inputdog">
       <scripts name="_Custom Controls">
         <script>scripts\inputdog_get_custom_controls_file.gml</script>
@@ -125,10 +114,6 @@
       <script>scripts\inputdog_released.gml</script>
       <script>scripts\inputdog_set_rumble.gml</script>
     </scripts>
-    <script>scripts\approach.gml</script>
-    <script>scripts\scr_generate_cloud.gml</script>
-    <script>scripts\log.gml</script>
-    <script>scripts\mp_fighter_step.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\major_snafu</font>
@@ -138,17 +123,10 @@
     </fonts>
   </fonts>
   <objects name="objects">
-    <objects name="Menus">
-      <object>objects\obj_main_menu</object>
-      <object>objects\obj_pause_screen</object>
-    </objects>
     <objects name="Effects">
-      <object>objects\obj_transition</object>
-      <objects name="Battle Effects">
-        <object>objects\obj_fighter_explosion</object>
-        <object>objects\obj_bullet_impact</object>
-        <object>objects\obj_parent_effect</object>
-      </objects>
+      <object>objects\obj_fighter_explosion</object>
+      <object>objects\obj_bullet_impact</object>
+      <object>objects\obj_parent_effect</object>
     </objects>
     <objects name="Weapons">
       <objects name="Player Weapons">
@@ -171,22 +149,18 @@
         <object>objects\obj_enemy</object>
         <object>objects\obj_chaser</object>
         <object>objects\obj_advanced_chaser</object>
-        <object>objects\obj_pathfinder</object>
       </objects>
       <object>objects\obj_parent_fighter</object>
     </objects>
     <objects name="Controllers">
-      <object>objects\obj_init_controller</object>
       <object>objects\obj_hud_controller</object>
       <object>objects\obj_input_controller</object>
       <object>objects\obj_controller_spawner</object>
-      <object>objects\obj_objective</object>
-      <object>objects\obj_objectives_controller</object>
-      <object>objects\obj_score_controller</object>
-      <object>objects\obj_cloud_generator</object>
-      <object>objects\obj_level_results</object>
-      <object>objects\obj_game_controller</object>
-      <object>objects\obj_grid_controller</object>
+      <objects name="Menus">
+        <object>objects\obj_main_menu</object>
+        <object>objects\obj_pause_screen</object>
+        <object>objects\obj_game_controller</object>
+      </objects>
     </objects>
     <objects name="inputdog">
       <objects name="ClickableButtons">
@@ -212,45 +186,22 @@
     <objects name="Tiles">
       <object>objects\obj_boundary</object>
     </objects>
-    <objects name="Audio">
-      <object>objects\obj_music</object>
-    </objects>
-    <object>objects\obj_location_goal</object>
-    <objects name="Environment">
-      <object>objects\obj_cloud</object>
-    </objects>
-    <object>objects\obj_collidable</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\r_init</room>
-    <rooms name="Test room">
-      <room>rooms\test_flight_range</room>
-    </rooms>
-    <rooms name="Menus">
-      <room>rooms\r_main_menu</room>
-      <room>rooms\r_level_results</room>
-    </rooms>
     <rooms name="inputdog">
       <room>rooms\rInitInputManager</room>
       <room>rooms\rExampleRoom</room>
       <room>rooms\rExampleInputRemapping</room>
     </rooms>
+    <rooms name="Menus">
+      <room>rooms\room2</room>
+    </rooms>
+    <rooms name="Test room">
+      <room>rooms\test_flight_range</room>
+    </rooms>
   </rooms>
-  <constants number="14">
-    <constant name="MP_GRID_CELL_SIZE">96</constant>
-    <constant name="CLOUD_OVER_DEPTH">-6</constant>
-    <constant name="CLOUD_UNDER_DEPTH">-3</constant>
-    <constant name="BATTLE_EFFECTS_DEPTH">-4</constant>
-    <constant name="BATTLE_ACTOR_DEPTH">-5</constant>
-    <constant name="BAR_HEART_Y_POS">0</constant>
-    <constant name="BAR_GUN_Y_POS">20</constant>
-    <constant name="BAR_SPEED_Y_POS">40</constant>
-    <constant name="TEXT_SCORE_Y_POS">60</constant>
-    <constant name="UI_BAR_HEIGHT">15</constant>
+  <constants number="1">
     <constant name="UI_BAR_WIDTH">150</constant>
-    <constant name="MIN_PLAYER_SLOT">1</constant>
-    <constant name="MAX_PLAYER_SLOT">4</constant>
-    <constant name="PLAY_MUSIC_EVENT_NUM">1</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

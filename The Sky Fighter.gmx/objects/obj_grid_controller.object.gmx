@@ -5,7 +5,7 @@
   <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>obj_collidable</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,66 +25,16 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Identifier
-to_string = "";
-
-//Constants for all
-TURN_SUB_IMG_1_ANGLE = 1.5;
-
-// Common variables
-hp = 0;
-image_speed = 0;
-turn_angle = 0;
-afterburner = false;
-can_shoot = true;
-turn_ratio = 0;
-direction_previous = direction;
-
-/* Dummy variables that should be overriden by
- * child objects
- */
-max_turn_angle = 0;
-max_afterburner_speed = 0;
-afterburner_increment = 0;
-afterburner_decrement = 0;
-turn_increment = 0;
-turn_decrement = 0;
-default_speed = 0;
-depth = BATTLE_ACTOR_DEPTH;
-
-enum state {normal, outside, chasing, scanning};
+            <string>var cell_size = MP_GRID_CELL_SIZE;
+var num_hcells = room_width / cell_size;
+var num_vcells = room_height / cell_size;
+global.grid = mp_grid_create(0, 0, room_width / MP_GRID_CELL_SIZE, room_height / MP_GRID_CELL_SIZE, MP_GRID_CELL_SIZE, MP_GRID_CELL_SIZE);
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="2" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>611</id>
-        <kind>6</kind>
-        <userelative>-1</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>can_shoot</string>
-          </argument>
-          <argument>
-            <kind>0</kind>
-            <string>true</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="3" enumb="0">
+    <event eventtype="1" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -101,51 +51,14 @@ enum state {normal, outside, chasing, scanning};
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(hp &lt;= 0)
-{
-    instance_create(x, y, obj_fighter_explosion);
-    instance_destroy();
-    exit;
-}
-
-if(turn_ratio &gt; 0)
-{
-    if(turn_angle &lt; turn_ratio * max_turn_angle){
-        turn_angle += turn_increment;}
-}
-else if(turn_ratio &lt; 0)
-{
-    if(turn_angle &gt; turn_ratio * max_turn_angle){
-        turn_angle -= turn_increment;}
-}
-else if(turn_angle != 0){
-    turn_angle -= (abs(turn_angle)/turn_angle) * turn_decrement;}
-
-direction += turn_angle;
-
-if(!afterburner &amp;&amp; speed &gt; default_speed)
-    {speed -= afterburner_decrement;}
-    
-var dir_change = direction - direction_previous
-    
-if(abs(dir_change) &gt; TURN_SUB_IMG_1_ANGLE / 2){
-    image_index = 1;}
-else{
-    image_index = 0;}
-
-if((dir_change) &lt; 0)
-    {image_yscale = -1;}
-else
-    {image_yscale = 1;}
-    
-direction_previous = direction;
-image_angle = direction;
+            <string>/// Get rid of the level's grid
+mp_grid_destroy(global.grid);
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="0">
+    <event eventtype="3" enumb="1">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -162,8 +75,33 @@ image_angle = direction;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_shadow_ext(20, 180, 0.5, 0.5, direction, c_black, 0.75);
-draw_self();
+            <string>/// Clear old forbidden cells and mark new ones
+mp_grid_clear_all(global.grid);
+mp_grid_add_instances(global.grid, obj_collidable, false);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="5">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Destroy this controller
+instance_destroy(id);
 </string>
           </argument>
         </arguments>

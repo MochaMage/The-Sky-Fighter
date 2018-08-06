@@ -3,9 +3,9 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>10</depth>
   <persistent>0</persistent>
-  <parentName>obj_collidable</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,10 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Identifier
-to_string = "";
-
-//Constants for all
+            <string>//Constants for all
 TURN_SUB_IMG_1_ANGLE = 1.5;
 
 // Common variables
@@ -50,7 +47,7 @@ afterburner_decrement = 0;
 turn_increment = 0;
 turn_decrement = 0;
 default_speed = 0;
-depth = BATTLE_ACTOR_DEPTH;
+
 
 enum state {normal, outside, chasing, scanning};
 </string>
@@ -105,23 +102,7 @@ enum state {normal, outside, chasing, scanning};
 {
     instance_create(x, y, obj_fighter_explosion);
     instance_destroy();
-    exit;
 }
-
-if(turn_ratio &gt; 0)
-{
-    if(turn_angle &lt; turn_ratio * max_turn_angle){
-        turn_angle += turn_increment;}
-}
-else if(turn_ratio &lt; 0)
-{
-    if(turn_angle &gt; turn_ratio * max_turn_angle){
-        turn_angle -= turn_increment;}
-}
-else if(turn_angle != 0){
-    turn_angle -= (abs(turn_angle)/turn_angle) * turn_decrement;}
-
-direction += turn_angle;
 
 if(!afterburner &amp;&amp; speed &gt; default_speed)
     {speed -= afterburner_decrement;}

@@ -5,7 +5,7 @@
   <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>obj_collidable</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,61 +25,16 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Identifier
-to_string = "";
+            <string>show_game_options = false;
 
-//Constants for all
-TURN_SUB_IMG_1_ANGLE = 1.5;
+options_menu_width = 300;
+options_menu_height = 300;
 
-// Common variables
-hp = 0;
-image_speed = 0;
-turn_angle = 0;
-afterburner = false;
-can_shoot = true;
-turn_ratio = 0;
-direction_previous = direction;
-
-/* Dummy variables that should be overriden by
- * child objects
- */
-max_turn_angle = 0;
-max_afterburner_speed = 0;
-afterburner_increment = 0;
-afterburner_decrement = 0;
-turn_increment = 0;
-turn_decrement = 0;
-default_speed = 0;
-depth = BATTLE_ACTOR_DEPTH;
-
-enum state {normal, outside, chasing, scanning};
+options = ds_list_create();
+ds_list_add(options, "Restart");
+ds_list_add(options, "Main Menu");
+ds_list_add(options, "Quit");
 </string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="2" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>611</id>
-        <kind>6</kind>
-        <userelative>-1</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>can_shoot</string>
-          </argument>
-          <argument>
-            <kind>0</kind>
-            <string>true</string>
           </argument>
         </arguments>
       </action>
@@ -101,51 +56,17 @@ enum state {normal, outside, chasing, scanning};
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(hp &lt;= 0)
+            <string>if(!instance_exists(obj_player) || !instance_exists(obj_enemy))
 {
-    instance_create(x, y, obj_fighter_explosion);
-    instance_destroy();
-    exit;
+    instance_deactivate_all(true);
+    show_game_options = true;
 }
-
-if(turn_ratio &gt; 0)
-{
-    if(turn_angle &lt; turn_ratio * max_turn_angle){
-        turn_angle += turn_increment;}
-}
-else if(turn_ratio &lt; 0)
-{
-    if(turn_angle &gt; turn_ratio * max_turn_angle){
-        turn_angle -= turn_increment;}
-}
-else if(turn_angle != 0){
-    turn_angle -= (abs(turn_angle)/turn_angle) * turn_decrement;}
-
-direction += turn_angle;
-
-if(!afterburner &amp;&amp; speed &gt; default_speed)
-    {speed -= afterburner_decrement;}
-    
-var dir_change = direction - direction_previous
-    
-if(abs(dir_change) &gt; TURN_SUB_IMG_1_ANGLE / 2){
-    image_index = 1;}
-else{
-    image_index = 0;}
-
-if((dir_change) &lt; 0)
-    {image_yscale = -1;}
-else
-    {image_yscale = 1;}
-    
-direction_previous = direction;
-image_angle = direction;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="0">
+    <event eventtype="8" enumb="64">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -162,8 +83,21 @@ image_angle = direction;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_shadow_ext(20, 180, 0.5, 0.5, direction, c_black, 0.75);
-draw_self();
+            <string>if(show_game_options)
+{
+    draw_set_halign(fa_center);
+    var menu_x = window_get_width() / 2 - options_menu_width / 2;
+    var menu_y = window_get_height() / 2 - options_menu_height / 2;
+    
+    draw_roundrect_colour(menu_x, menu_y, 
+        menu_x + options_menu_width, menu_y + options_menu_height,
+        c_black, c_black, false);
+    
+    for(var opt = 0; opt &lt; ds_list_size(options); opt++)
+    {
+        draw_text(window_get_width() / 2, menu_y + opt * 20, options[| opt]);
+    }
+}
 </string>
           </argument>
         </arguments>

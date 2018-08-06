@@ -5,7 +5,7 @@
   <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>obj_collidable</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,34 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Identifier
-to_string = "";
+            <string>options = ds_list_create();
 
-//Constants for all
-TURN_SUB_IMG_1_ANGLE = 1.5;
+ds_list_add(options, "Play");
+ds_list_add(options, "Toggle full screen");
+ds_list_add(options, "Quit");
 
-// Common variables
-hp = 0;
-image_speed = 0;
-turn_angle = 0;
-afterburner = false;
-can_shoot = true;
-turn_ratio = 0;
-direction_previous = direction;
-
-/* Dummy variables that should be overriden by
- * child objects
- */
-max_turn_angle = 0;
-max_afterburner_speed = 0;
-afterburner_increment = 0;
-afterburner_decrement = 0;
-turn_increment = 0;
-turn_decrement = 0;
-default_speed = 0;
-depth = BATTLE_ACTOR_DEPTH;
-
-enum state {normal, outside, chasing, scanning};
+cursor_pos = 0;
+can_move_cursor = true;
 </string>
           </argument>
         </arguments>
@@ -75,7 +55,7 @@ enum state {normal, outside, chasing, scanning};
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>can_shoot</string>
+            <string>can_move_cursor</string>
           </argument>
           <argument>
             <kind>0</kind>
@@ -101,51 +81,45 @@ enum state {normal, outside, chasing, scanning};
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(hp &lt;= 0)
+            <string>if(can_move_cursor)
 {
-    instance_create(x, y, obj_fighter_explosion);
-    instance_destroy();
-    exit;
-}
-
-if(turn_ratio &gt; 0)
-{
-    if(turn_angle &lt; turn_ratio * max_turn_angle){
-        turn_angle += turn_increment;}
-}
-else if(turn_ratio &lt; 0)
-{
-    if(turn_angle &gt; turn_ratio * max_turn_angle){
-        turn_angle -= turn_increment;}
-}
-else if(turn_angle != 0){
-    turn_angle -= (abs(turn_angle)/turn_angle) * turn_decrement;}
-
-direction += turn_angle;
-
-if(!afterburner &amp;&amp; speed &gt; default_speed)
-    {speed -= afterburner_decrement;}
+    cursor_pos -= max(keyboard_check(vk_up), keyboard_check(ord('W')), 0);
+    cursor_pos += max(keyboard_check(vk_down), keyboard_check(ord('S')), 0);
     
-var dir_change = direction - direction_previous
+    if(cursor_pos &lt; 0){
+        cursor_pos = ds_list_size(options) - 1;}
+    if(cursor_pos &gt;= ds_list_size(options)){
+        cursor_pos = 0;}
     
-if(abs(dir_change) &gt; TURN_SUB_IMG_1_ANGLE / 2){
-    image_index = 1;}
-else{
-    image_index = 0;}
-
-if((dir_change) &lt; 0)
-    {image_yscale = -1;}
-else
-    {image_yscale = 1;}
+    can_move_cursor = false;
+    alarm_set(0, room_speed / 12);
     
-direction_previous = direction;
-image_angle = direction;
+    if(keyboard_check(vk_enter))
+    {
+        switch(options[| cursor_pos])
+        {
+            case "Play":
+                room_goto(test_flight_range);
+                break;
+            case "Toggle full screen":
+               if(window_get_fullscreen())
+               {
+                    scr_resize_window(1280, 1024);
+               }
+               else{
+                    window_set_fullscreen(true);}
+               break;
+            case "Quit":
+                game_end();
+        }
+    }
+}
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="0">
+    <event eventtype="8" enumb="64">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -162,8 +136,41 @@ image_angle = direction;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_shadow_ext(20, 180, 0.5, 0.5, direction, c_black, 0.75);
-draw_self();
+            <string>var width = display_get_gui_width();
+var height = display_get_gui_height();
+
+draw_text(100, 100, "Width: " + string(width));
+draw_text(100, 120, "Height: " + string(height));
+draw_text(100, 140, "Sprite x: " + string(width / 2));
+draw_text(100, 160, "Sprite y: " + string(height - sprite_get_height(spr_f22)));
+
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
+
+draw_set_colour(c_black);
+draw_roundrect(0, 0, width / 2, ds_list_size(options) * 20, false);
+
+draw_sprite_ext(spr_f22, 0,  
+    width / 2, height - sprite_get_height(spr_f22),
+    1, 1, 90, c_white, 1);
+    
+for(var opt = 0; opt &lt; ds_list_size(options); opt++)
+{
+    // Default color and font
+    var color_top = c_white;
+    var color_bottom = c_gray;
+    draw_set_font(major_snafu);
+    
+    // Selected menu option
+    if(opt == cursor_pos)
+    {
+        color_top = c_yellow;
+        color_bottom = c_gray;
+        draw_set_font(major_snafu_italic);
+    }
+    draw_text_colour(20, opt * 20, options[| opt], 
+        color_top, color_top, color_bottom, color_bottom, 1);
+}
 </string>
           </argument>
         </arguments>

@@ -44,36 +44,18 @@ ROTATION_STEPS = 0.25;
 NUM_LOOK_AHEAD_STEPS = 10;
 SCAN_RADIUS = 500;
 PLAYER_ANTICOLLISION_DIST = 250;
-MAX_TURN_ANGLE = 2;
-TURN_INCREMENT = 0.10;
-TURN_DECREMENT = 0.5;
-CHASER_SPEED = 5;
+MAX_TURN_ANGLE = 3;
+CHASER_SPEED = 3;
 CHASER_BULLET_SPEED = CHASER_SPEED * 5;
 CHASER_BULLET_INTERVAL = room_speed / 10;
 GUN_RANGE = 400;
-GOAL_PROXIMITY = 300;
-POINT_WORTH = 75;
+GOAL_PROXIMITY = 100;
 
 hp = 50;
 turn_angle = 0;
 chaser_state = state.scanning;
 spd = CHASER_SPEED;
-point_worth = POINT_WORTH;
-max_turn_angle = MAX_TURN_ANGLE;
-turn_decrement = TURN_DECREMENT;
-turn_increment = TURN_INCREMENT;
-spd = CHASER_SPEED;
-to_string = "Advanced Chaser";
-goal_x = 0;
-goal_y = 0;
-
-// Create an invisible object to plan out the path with no obstacles to follow a number of pixels ahead 
-min_distance = MP_GRID_CELL_SIZE * 0.75;
-max_distance = MP_GRID_CELL_SIZE * 1.25;
-pathfinder = instance_create(x + lengthdir_x(max_distance, direction), y + lengthdir_y(max_distance, direction), obj_pathfinder);
-pathfinder.follower = id;
     
-// Start out going to a random spot on the map
 get_new_scan_location();
 </string>
           </argument>
@@ -152,122 +134,9 @@ else
         get_new_scan_location();}
 }
 
-/*
-//mp_fighter_step(goal_x, goal_y, 400, 60, 5);
-// Direction to the goal
-scan_radius = 800;
-scan_angle = 90;
-scan_angle_step = 3;
-goal_dir = point_direction(x, y, goal_x, goal_y);
-
-// Scan in the direction towards the goal for the path
-// with no collision that requires the least amount of turning
-left_path = noone;
-right_path = noone;
-clear_path_offset = noone;
-
-// Check to the left of the straight path to the goal
-// GM's direction angles increase counter-clockwise so
-// add the angle difference i to the goal direction
-for(var i = 0; i &lt;= scan_angle/2; i += scan_angle_step)
-{
-    // Check to the left of the goal direction
-    var path_obstructed = collision_line(x, y, 
-        x + lengthdir_x(scan_radius, direction + i), 
-        y + lengthdir_y(scan_radius, direction + i), 
-        obj_collidable, false, true);
-    if(path_obstructed == noone)
-    {
-        clear_path_offset = i;
-    }
-    
-    // Check to the right of the goal direction
-    path_obstructed = collision_line(x, y, 
-        x + lengthdir_x(scan_radius, direction - i), 
-        y + lengthdir_y(scan_radius, direction - i), 
-        obj_collidable, false, true);
-    if(path_obstructed == noone)
-    {
-        clear_path_offset = -1 * i;
-    }
-    
-    if(clear_path_offset != noone) break;
-}
-if(clear_path_offset == noone) clear_path_offset = 0;
-target_dir = goal_dir + clear_path_offset;
-dir_dif = target_dir - direction;
-
-turn_ratio = clamp(dir_dif, -1, 1);
-*/
-mp_potential_settings(3.5, 1.75, 40, false);
-mp_potential_step(pathfinder.x, pathfinder.y, spd, false);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="64">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>draw_set_colour(c_black);
-draw_set_alpha(1);
-draw_text(200, 500, "Goal X: " + string(goal_x) + " Y: " + string(goal_y));
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>604</id>
-        <kind>0</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_inherited</functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>draw_set_alpha(1);
-draw_set_colour(c_black);
-draw_circle(goal_x, goal_y, 30, false);/*
-draw_line_width(x, y, x + lengthdir_x(scan_radius, target_dir), y + lengthdir_y(scan_radius, target_dir), 10);
-draw_set_colour(c_fuchsia);
-draw_line(x, y, x + lengthdir_x(scan_radius, goal_dir), y + lengthdir_y(scan_radius, goal_dir));*/
+mp_potential_settings(MAX_TURN_ANGLE, ROTATION_STEPS,
+    NUM_LOOK_AHEAD_STEPS, false);
+mp_potential_step(goal_x, goal_y, spd, false);
 </string>
           </argument>
         </arguments>
