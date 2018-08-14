@@ -1,4 +1,4 @@
-var x_pos = 0;//view_xport[player_slot - 1];
+var x_pos = view_xport[player_slot - 1];
 var y_pos = view_yport[player_slot - 1];
 
 draw_set_alpha(0.85);
