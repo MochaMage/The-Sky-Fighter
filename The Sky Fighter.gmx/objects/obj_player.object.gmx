@@ -236,19 +236,11 @@ hp = 0;
 // Check directional inputs
 if(!is_dodging)
 {
-    if(inputdog_down("left", player_slot))
-    {
-        turn_ratio = min(1, inputdog_analog("left", player_slot));
-    }
-    
-    if(inputdog_down("right", player_slot))
-    {
-        turn_ratio = -1 * min(1, inputdog_analog("right", player_slot));
-    }
+    turn_ratio = inputdog_analog("left", player_slot) - inputdog_analog("right", player_slot);
 }
 
 // Check face buttons
-if(inputdog_down("a", player_slot))
+if(inputdog_down("gun", player_slot))
 {
     if(can_shoot &amp;&amp; !forced_cooldown)
     {
@@ -273,7 +265,7 @@ if(inputdog_down("a", player_slot))
     }
 }
 
-if(inputdog_down("x", player_slot))
+if(inputdog_down("afterburner", player_slot))
 {
     afterburner = true;
     
@@ -281,7 +273,7 @@ if(inputdog_down("x", player_slot))
         speed += PLAYER_AFTERBURNER_INCREMENT;}
 }
 
-if(inputdog_down("b", player_slot))
+/*if(inputdog_down("b", player_slot))
 {
     if(can_dodge)
     {
@@ -290,9 +282,9 @@ if(inputdog_down("b", player_slot))
         image_speed = 1;
         is_dodging = true;
     }
-}
+}*/
 
-if(inputdog_pressed("y", player_slot))
+if(inputdog_pressed("target", player_slot))
 {
     // Acquire a target. Pick nearest enemy. 
     // If a target is already set, then unset 
@@ -310,9 +302,9 @@ if(inputdog_pressed("y", player_slot))
 // Check for input releases
 if(inputdog_released("left", player_slot) || inputdog_released("right", player_slot)){
     turn_ratio = 0;}
-if(inputdog_released("a", player_slot)){
+if(inputdog_released("gun", player_slot)){
     is_shooting = false;}
-if(inputdog_released("x", player_slot)){
+if(inputdog_released("afterburner", player_slot)){
     afterburner = false;}
 
 </string>
@@ -351,7 +343,12 @@ if(inputdog_released("x", player_slot)){
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Make player return to field. To be deprecated by self-destruction.
+            <string>// Change view coordinates for player
+view_xview[player_slot - 1] = clamp(x - view_wview[player_slot - 1] / 2, 0, room_width - view_wview[player_slot - 1]);
+view_yview[player_slot - 1] = clamp(y - view_hview[player_slot - 1] / 2, 0, room_height - view_hview[player_slot - 1]);
+//view_angle[player_slot - 1] = 90 - direction;
+
+// Make player return to field. To be deprecated by self-destruction.
 if(player_state == state.normal)
 {
     // Moved code to parent fighter
@@ -444,8 +441,6 @@ else
        }
     }
 }*/
-
-//view_angle = 90 - direction;
 </string>
           </argument>
         </arguments>
@@ -556,6 +551,9 @@ goal_y = yprevious;
     draw_text(view_wview[0]/2, view_hview[0]/2, "Return to the field of battle, pilot");
     draw_text(view_wview[0]/2, view_hview[0]/2 + 20, string(alarm[2]));
 }
+
+draw_text(20, 500, "Stick X: " + string(-inputdog_analog("left", 1)+inputdog_analog("right", 1)) + " Y: " + string(-inputdog_analog("down", 1) + inputdog_analog("up", 1)));
+draw_text(20, 520, "Turn Ratio: " + string(turn_ratio));
 </string>
           </argument>
         </arguments>

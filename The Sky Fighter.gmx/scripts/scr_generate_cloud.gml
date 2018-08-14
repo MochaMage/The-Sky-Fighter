@@ -49,6 +49,6 @@ with(cloud)
     {
         depth = CLOUD_UNDER_DEPTH;
         speed = speed / 2;
-        image_alpha = random_range(0.5, 1);
+        image_alpha = random_range(0.5, 0.65);
     }
 }

@@ -187,6 +187,7 @@
       <object>objects\obj_level_results</object>
       <object>objects\obj_game_controller</object>
       <object>objects\obj_grid_controller</object>
+      <object>objects\obj_multiplayer_controller</object>
     </objects>
     <objects name="inputdog">
       <objects name="ClickableButtons">
@@ -223,21 +224,23 @@
   </objects>
   <rooms name="rooms">
     <room>rooms\r_init</room>
-    <rooms name="Test room">
-      <room>rooms\test_flight_range</room>
-    </rooms>
-    <rooms name="Menus">
-      <room>rooms\r_main_menu</room>
-      <room>rooms\r_level_results</room>
-    </rooms>
     <rooms name="inputdog">
       <room>rooms\rInitInputManager</room>
       <room>rooms\rExampleRoom</room>
       <room>rooms\rExampleInputRemapping</room>
     </rooms>
+    <rooms name="Test room">
+      <room>rooms\test_flight_range</room>
+      <room>rooms\test_canyon_navigation</room>
+    </rooms>
+    <rooms name="Menus">
+      <room>rooms\r_main_menu</room>
+      <room>rooms\r_level_results</room>
+    </rooms>
   </rooms>
-  <constants number="14">
-    <constant name="MP_GRID_CELL_SIZE">96</constant>
+  <constants number="16">
+    <constant name="UI_WIDTH">1920</constant>
+    <constant name="MP_GRID_CELL_SIZE">128</constant>
     <constant name="CLOUD_OVER_DEPTH">-6</constant>
     <constant name="CLOUD_UNDER_DEPTH">-3</constant>
     <constant name="BATTLE_EFFECTS_DEPTH">-4</constant>
@@ -251,6 +254,7 @@
     <constant name="MIN_PLAYER_SLOT">1</constant>
     <constant name="MAX_PLAYER_SLOT">4</constant>
     <constant name="PLAY_MUSIC_EVENT_NUM">1</constant>
+    <constant name="UI_HEIGHT">1080</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>

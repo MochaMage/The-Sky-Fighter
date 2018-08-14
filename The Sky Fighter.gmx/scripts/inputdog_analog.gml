@@ -11,5 +11,5 @@ if(argument_count>1)
     PLAYER = argument[1];
     INPUT_MANAGER = inputdog_find_inputmanager_child_by_player(PLAYER);
 }
-
+var thing = object_get_name(INPUT_MANAGER.object_index);
 return ds_map_find_value(INPUT_MANAGER.inputsDown, INPUT);

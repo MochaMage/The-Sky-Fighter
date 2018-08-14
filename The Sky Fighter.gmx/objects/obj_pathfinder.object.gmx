@@ -2,7 +2,7 @@
 <object>
   <spriteName>spr_heart</spriteName>
   <solid>0</solid>
-  <visible>-1</visible>
+  <visible>0</visible>
   <depth>-2030</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
@@ -90,9 +90,9 @@ else
 
 if(previous_goal_x != follower.goal_x || previous_goal_y != follower.goal_y)
 {
-    mp_grid_path(global.grid, path_holder, x, y, follower.goal_x, follower.goal_y, true);
+    var path_result = mp_grid_path(global.grid, path_holder, x, y, follower.goal_x, follower.goal_y, true);
     path_set_kind(path_holder, 1);
-    path_set_precision(path_holder, 3);
+    path_set_precision(path_holder, 6);
     path_start(path_holder, follower.spd, path_action_stop, true);
     previous_goal_x = follower.goal_x;
     previous_goal_y = follower.goal_y;

@@ -74,7 +74,7 @@ changing_room = false;
           <argument>
             <kind>1</kind>
             <string>var all_completed = true;
-if(!global.objectives_completed)
+if(!global.objectives_completed &amp;&amp; ds_list_size(level_objectives) &gt; 0)
 {
     for(var i = 0; i &lt; ds_list_size(level_objectives); i++)
     {

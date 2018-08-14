@@ -32,6 +32,7 @@ inputdog_add_input("up",     ord("W"),   inputdog_gp_left_stick_up);
 inputdog_add_input("down",   ord("S"),   inputdog_gp_left_stick_down);
 inputdog_add_input("bark",   ord("F"),   gp_face3);
 inputdog_add_input("growl",  ord("G"),   gp_face1);
+inputdog_add_input("gun", vk_rshift, gp_face2);
 </string>
           </argument>
         </arguments>

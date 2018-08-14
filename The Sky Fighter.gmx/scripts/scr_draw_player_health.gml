@@ -1,12 +1,9 @@
-var player = argument0;
-var player_num = argument1;
-
-var x_pos = 0;
-var y_pos = 0;
+var x_pos = 0;//view_xport[player_slot - 1];
+var y_pos = view_yport[player_slot - 1];
 
 draw_set_alpha(0.85);
 draw_healthbar(x_pos, y_pos, x_pos + UI_BAR_WIDTH, y_pos + UI_BAR_HEIGHT, 
-    player.hp, c_black, c_red, c_green, 0, true, true);
+    hp, c_black, c_red, c_green, 0, true, true);
 var heart_size = sprite_get_height(spr_heart);
 var heart_scale = UI_BAR_HEIGHT / heart_size;
 

@@ -52,36 +52,35 @@ OBJECTIVES_EDGE_OFFSET = 2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>var fighters = scr_get_fighters(obj_parent_fighter);
-var players = ds_list_create();
-
-for(var i = 0; i &lt; ds_list_size(fighters); i++)
+            <string>// Draw division between player screens
+if(instance_number(obj_player) &gt; 1)
 {
-    if(fighters[| i].object_index == obj_player){
-        ds_list_add(players, fighters[| i])}
+    draw_set_colour(c_black);
+    draw_set_alpha(1);
+    draw_line(window_get_width()/2, 0, window_get_width()/2, window_get_height());
 }
 
 // Draw minimap
-scr_draw_minimap(MINIMAP_X_PERC, MINIMAP_Y_PERC, MINIMAP_EDGE_OFFSET, fighters);
+scr_draw_minimap(MINIMAP_X_PERC, MINIMAP_Y_PERC, MINIMAP_EDGE_OFFSET);
 
 // Draw game objectives
 scr_draw_objectives(OBJECTIVES_X_PERC, OBJECTIVES_EDGE_OFFSET);
 
-for(var i = 0; i &lt; ds_list_size(players); i++)
+with(obj_player)
 {
     // Draw player's health
-    scr_draw_player_health(players[| i], i);
+    scr_draw_player_health();
     
     // Draw player's gun heat
-    scr_draw_player_gun_bar(players[| i], i);
+    scr_draw_player_gun_bar();
     
     // Draw player's afterburner
-    scr_draw_player_speed(players[| i], i);
+    scr_draw_player_speed();
     
     // Draw player's missile count
     
     // Draw player's score
-    scr_draw_player_score(players[| i], i);
+    scr_draw_player_score();
 }
 </string>
           </argument>

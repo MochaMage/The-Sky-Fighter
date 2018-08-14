@@ -29,10 +29,14 @@
 inputdog_add_input("right", vk_right, inputdog_gp_left_stick_right);
 inputdog_add_input("up", vk_up, inputdog_gp_left_stick_up);
 inputdog_add_input("down", vk_down, inputdog_gp_left_stick_down);
-inputdog_add_input("a", vk_space, gp_face1);
-inputdog_add_input("b", ord("Z"), gp_face2);
-inputdog_add_input("x", vk_control, gp_face3);
-inputdog_add_input("y", vk_shift, gp_face4);
+inputdog_add_input("gun", vk_space, gp_face1);          // A button on Xbox controller
+inputdog_add_input("afterburner", ord("Z"), gp_face2);  // B Button on Xbox controller
+inputdog_add_input("missile", vk_control, gp_face3);    // 
+inputdog_add_input("target", vk_shift, gp_face4);       //
+
+// Test code for inputdog extension
+/*inputdog_add_input("bark",   ord("F"),   gp_face3);
+inputdog_add_input("growl",  ord("G"),   gp_face1);*/
 </string>
           </argument>
         </arguments>

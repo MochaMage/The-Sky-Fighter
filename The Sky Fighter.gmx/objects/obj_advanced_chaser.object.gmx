@@ -69,12 +69,36 @@ goal_y = 0;
 
 // Create an invisible object to plan out the path with no obstacles to follow a number of pixels ahead 
 min_distance = MP_GRID_CELL_SIZE * 0.75;
-max_distance = MP_GRID_CELL_SIZE * 1.25;
-pathfinder = instance_create(x + lengthdir_x(max_distance, direction), y + lengthdir_y(max_distance, direction), obj_pathfinder);
+max_distance = MP_GRID_CELL_SIZE * 1.15;
+pathfinder = instance_create(x + 2 * lengthdir_x(max_distance, direction), y + 2 * lengthdir_y(max_distance, direction), obj_pathfinder);
 pathfinder.follower = id;
     
 // Start out going to a random spot on the map
 get_new_scan_location();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="1" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Destroy the pathfinder
+instance_destroy(pathfinder);
 </string>
           </argument>
         </arguments>
@@ -199,33 +223,13 @@ dir_dif = target_dir - direction;
 
 turn_ratio = clamp(dir_dif, -1, 1);
 */
-mp_potential_settings(3.5, 1.75, 40, false);
-mp_potential_step(pathfinder.x, pathfinder.y, spd, false);
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="64">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>draw_set_colour(c_black);
-draw_set_alpha(1);
-draw_text(200, 500, "Goal X: " + string(goal_x) + " Y: " + string(goal_y));
+//Testing
+
+if(instance_exists(pathfinder))
+{
+    mp_potential_settings(3.5, 1.75, 30, false);
+    mp_potential_step(pathfinder.x, pathfinder.y, spd, false);
+}
 </string>
           </argument>
         </arguments>
