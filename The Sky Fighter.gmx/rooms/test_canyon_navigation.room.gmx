@@ -41,7 +41,7 @@
     <background visible="0" foreground="0" name="" x="0" y="0" htiled="-1" vtiled="-1" hspeed="0" vspeed="0" stretch="0"/>
   </backgrounds>
   <views>
-    <view visible="-1" objName="&lt;undefined&gt;" xview="0" yview="0" wview="1920" hview="1080" xport="0" yport="0" wport="1920" hport="1080" hborder="900" vborder="1200" hspeed="-1" vspeed="-1"/>
+    <view visible="-1" objName="obj_advanced_chaser" xview="0" yview="0" wview="1920" hview="1080" xport="0" yport="0" wport="1920" hport="1080" hborder="900" vborder="1200" hspeed="-1" vspeed="-1"/>
     <view visible="0" objName="obj_chaser" xview="0" yview="0" wview="640" hview="720" xport="640" yport="0" wport="640" hport="720" hborder="900" vborder="900" hspeed="-1" vspeed="-1"/>
     <view visible="0" objName="&lt;undefined&gt;" xview="0" yview="0" wview="1024" hview="768" xport="0" yport="0" wport="1024" hport="768" hborder="32" vborder="32" hspeed="-1" vspeed="-1"/>
     <view visible="0" objName="&lt;undefined&gt;" xview="0" yview="0" wview="1024" hview="768" xport="0" yport="0" wport="1024" hport="768" hborder="32" vborder="32" hspeed="-1" vspeed="-1"/>
@@ -59,13 +59,21 @@
     <instance objName="obj_cloud_generator" x="32" y="-32" name="inst_98A53A40" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_objectives_controller" x="96" y="-64" name="inst_7E08B7C2" locked="0" code="/*var objective = instance_create(0, 0, obj_objective);&#xA;with(objective)&#xA;{&#xA;    active_objective = objective_types.location;&#xA;    objective_params[? &quot;place_object&quot;] = instance_find(obj_location_goal, 0);&#xA;}&#xA;&#xA;var objective2 = instance_create(0, 0, obj_objective);&#xA;with(objective2)&#xA;{&#xA;    active_objective = objective_types.elimination;&#xA;    objective_params[? &quot;enemy_type&quot;] = obj_advanced_chaser;&#xA;}&#xA;&#xA;ds_list_add(level_objectives, objective);&#xA;ds_list_add(level_objectives, objective2);*/" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="obj_game_controller" x="64" y="-32" name="inst_318DC89A" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="obj_advanced_chaser" x="1440" y="2272" name="inst_8CFB2BCF" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="obj_player" x="160" y="2112" name="inst_3263A70D" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="obj_collidable" x="2752" y="2240" name="inst_7B6C3313" locked="0" code="" scaleX="1.83333337306976" scaleY="12.5" colour="4294967295" rotation="0"/>
-    <instance objName="obj_collidable" x="1248" y="1280" name="inst_7080C7C1" locked="0" code="" scaleX="13.1666669845581" scaleY="3.16666674613953" colour="4294967295" rotation="0"/>
-    <instance objName="obj_collidable" x="2432" y="1280" name="inst_A9E68761" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="obj_collidable" x="2144" y="1408" name="inst_92C6C648" locked="0" code="" scaleX="3.5" scaleY="0.833333313465118" colour="4294967295" rotation="-33"/>
-    <instance objName="obj_collidable" x="1184" y="2944" name="inst_B1859A96" locked="0" code="" scaleX="17.1666660308838" scaleY="1.5" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2272" y="-160" name="inst_7F00BEBB" locked="0" code="" scaleX="52.689998626709" scaleY="5.95833349227905" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="1696" y="2752" name="inst_CD2DD9FA" locked="0" code="" scaleX="4.05208349227905" scaleY="20.59375" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="1504" y="544" name="inst_8A4160CF" locked="0" code="" scaleX="33.4526329040527" scaleY="4.15999984741211" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2112" y="4128" name="inst_CC855F2C" locked="0" code="" scaleX="-33.6100006103516" scaleY="2.68421053886414" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="576" y="2848" name="inst_D5F586B7" locked="0" code="" scaleX="7.17999982833862" scaleY="26.1900005340576" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="3648" y="1408" name="inst_D9FF9509" locked="0" code="" scaleX="5.90999984741211" scaleY="-26.6299991607666" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2304" y="3680" name="inst_A1A8A0A3" locked="0" code="" scaleX="-2.07291674613953" scaleY="33.1800003051758" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2144" y="3168" name="inst_7F43424C" locked="0" code="" scaleX="1.57000005245209" scaleY="3.15789484977722" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="1952" y="2656" name="inst_9E0A5721" locked="0" code="" scaleX="1.29999995231628" scaleY="2.59999990463257" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2976" y="1472" name="inst_BE2F0703" locked="0" code="" scaleX="15.15625" scaleY="3.45263147354126" colour="4294967295" rotation="0"/>
+    <instance objName="obj_boundary" x="1440" y="3872" name="inst_66A0963B" locked="0" code="" scaleX="0.360000014305115" scaleY="0.5" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2400" y="832" name="inst_B3483D79" locked="0" code="" scaleX="12.7083330154419" scaleY="2.39000010490417" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="1760" y="1376" name="inst_4888AE62" locked="0" code="" scaleX="2.5" scaleY="10.1666669845581" colour="4294967295" rotation="0"/>
+    <instance objName="obj_collidable" x="2176" y="1920" name="inst_BF89E65B" locked="0" code="" scaleX="2.17000007629395" scaleY="6.5" colour="4294967295" rotation="0"/>
+    <instance objName="obj_advanced_chaser" x="64" y="224" name="inst_31D24162" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
   </instances>
   <tiles/>
   <PhysicsWorld>0</PhysicsWorld>

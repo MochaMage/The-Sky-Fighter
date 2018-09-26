@@ -3,8 +3,8 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>-9999</depth>
-  <persistent>0</persistent>
+  <depth>0</depth>
+  <persistent>-1</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
@@ -25,17 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>MINIMAP_X_PERC = .2;
-MINIMAP_Y_PERC = .2; 
-MINIMAP_EDGE_OFFSET = 2;
-OBJECTIVES_X_PERC = .2;
-OBJECTIVES_EDGE_OFFSET = 2;
+            <string>/// Create variables to keep track of active players
+player_2_active = false;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="64">
+    <event eventtype="3" enumb="1">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -52,35 +49,36 @@ OBJECTIVES_EDGE_OFFSET = 2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/*// Draw division between player screens
-if(instance_number(obj_player) &gt; 1)
+            <string>/// Check if new player has dropped into the game
+if(!player_2_active)
 {
-    draw_set_colour(c_black);
-    draw_set_alpha(1);
-    draw_line(window_get_width()/2, 0, window_get_width()/2, window_get_height());
-}*/
-
-// Draw minimap
-scr_draw_minimap(MINIMAP_X_PERC, MINIMAP_Y_PERC, MINIMAP_EDGE_OFFSET);
-
-// Draw game objectives
-scr_draw_objectives(OBJECTIVES_X_PERC, OBJECTIVES_EDGE_OFFSET);
-
-with(obj_player)
-{
-    // Draw player's health
-    scr_draw_player_health();
-    
-    // Draw player's gun heat
-    scr_draw_player_gun_bar();
-    
-    // Draw player's afterburner
-    scr_draw_player_speed();
-    
-    // Draw player's missile count
-    
-    // Draw player's score
-    scr_draw_player_score();
+    // Check if player 2's gun button has been pressed to add them to the game
+    if(inputdog_down("gun", 2))
+    {
+        // Create a new player object on the map, add them close to the first player
+        var new_player = instance_create(room_width / 2,  room_height / 2, obj_player);
+        new_player.player_slot = 2;
+        
+        // Modify the viewports and views onscreen
+        // Resize player 1's viewport
+        view_wport[0] = UI_WIDTH / 2;
+        view_wview[0] = UI_WIDTH / 2;
+        
+        // Enable second player's view
+        view_visible[1] = true;
+        
+        view_wport[1] = view_wport[0];
+        view_hport[1] = view_hport[0];
+        
+        view_hview[1] = view_hview[0];
+        view_wview[1] = view_wview[0];
+                
+        view_xport[1] = UI_WIDTH / 2;
+        view_yport[1] = 0;
+        
+        player_2_active = true;
+    }
+    // TODO: Check if player 2 wants to leave the game
 }
 </string>
           </argument>

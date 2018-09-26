@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>enum objective_types {survive, elimination, location, score_target};
+            <string>enum objective_types {survive, elimination, location, score_target, protect};
 
 active_objective = noone;
 // objective_params will contain a key-value map of the
@@ -34,6 +34,7 @@ active_objective = noone;
 // set of keys
 objective_params = ds_map_create();
 is_completed = false;
+failed = false;
 </string>
           </argument>
         </arguments>
@@ -123,6 +124,14 @@ is_completed = false;
                 {
                     is_completed = true;
                 }
+            }
+            break;
+        case objective_types.protect:
+            // Check whether the object they were supposed to protect is still alive
+            var defend_obj = objective_params[? "defend_object"];
+            if(!object_exists(defend_obj))
+            {
+                failed = true;
             }
     }
 }

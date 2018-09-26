@@ -2,7 +2,7 @@
 <object>
   <spriteName>spr_heart</spriteName>
   <solid>0</solid>
-  <visible>0</visible>
+  <visible>-1</visible>
   <depth>-2030</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
@@ -25,10 +25,15 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>path_holder = path_add();
+            <string>GOAL_PROXIMITY = 300;
+SCAN_RADIUS = 500;
 
-previous_goal_x = 0;
-previous_goal_y = 0;
+path_holder = path_add();
+path_result = false;
+scan_result = noone;
+
+goal_x = 0;
+goal_y = 0;
 </string>
           </argument>
         </arguments>
@@ -75,27 +80,43 @@ path_delete(path_holder);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(distance_to_object(follower) &gt;= follower.max_distance)
+            <string>scan_result = collision_circle(x, y, SCAN_RADIUS, obj_player, false, true);
+
+if(scan_result != noone)
+{
+    if(follower.chaser_state == state.scanning){
+        follower.chaser_state = state.chasing}
+        
+    goal_x = scan_result.x;
+    goal_y = scan_result.y;
+}
+else
+{
+    var goal_distance = distance_to_point(goal_x, goal_y);
+    
+    if(follower.chaser_state == state.chasing || path_result == false || goal_distance &lt;= GOAL_PROXIMITY)
+    {
+        follower.chaser_state = state.scanning;
+        get_new_scan_location();
+    }  
+}
+
+path_result = mp_grid_path(global.grid, path_holder, x, y, goal_x, goal_y, true);
+path_set_kind(path_holder, 1);
+path_set_precision(path_holder, 6);
+path_start(path_holder, follower.spd * 1.5, path_action_stop, true);
+
+if(distance_to_object(follower) &gt;= follower.max_distance)
 {
     path_speed = 0;
 }
 else if(distance_to_object(follower) &lt;= follower.min_distance)
 {
-    path_speed = follower.spd * 1.25;
+    path_speed = follower.spd * 1.5;
 }
 else
 {
     path_speed = follower.spd;
-}
-
-if(previous_goal_x != follower.goal_x || previous_goal_y != follower.goal_y)
-{
-    var path_result = mp_grid_path(global.grid, path_holder, x, y, follower.goal_x, follower.goal_y, true);
-    path_set_kind(path_holder, 1);
-    path_set_precision(path_holder, 6);
-    path_start(path_holder, follower.spd, path_action_stop, true);
-    previous_goal_x = follower.goal_x;
-    previous_goal_y = follower.goal_y;
 }
 </string>
           </argument>

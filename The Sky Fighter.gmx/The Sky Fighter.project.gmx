@@ -57,6 +57,9 @@
     </sprites>
     <sprite>sprites\mask_location</sprite>
     <sprite>sprites\mask_collidable</sprite>
+    <sprites name="Background">
+      <sprite>sprites\spr_mountain1</sprite>
+    </sprites>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_desert1</background>
@@ -240,7 +243,7 @@
   </rooms>
   <constants number="16">
     <constant name="UI_WIDTH">1920</constant>
-    <constant name="MP_GRID_CELL_SIZE">128</constant>
+    <constant name="MP_GRID_CELL_SIZE">64</constant>
     <constant name="CLOUD_OVER_DEPTH">-6</constant>
     <constant name="CLOUD_UNDER_DEPTH">-3</constant>
     <constant name="BATTLE_EFFECTS_DEPTH">-4</constant>

@@ -168,30 +168,6 @@ ds_map_destroy(predict_crosshair);
         </arguments>
       </action>
     </event>
-    <event eventtype="2" enumb="2">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// Player didn't move away from the boundary
-hp = 0; 
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="2" enumb="1">
       <action>
         <libid>1</libid>
@@ -348,35 +324,6 @@ view_xview[player_slot - 1] = clamp(x - view_wview[player_slot - 1] / 2, 0, room
 view_yview[player_slot - 1] = clamp(y - view_hview[player_slot - 1] / 2, 0, room_height - view_hview[player_slot - 1]);
 //view_angle[player_slot - 1] = 90 - direction;
 
-// Make player return to field. To be deprecated by self-destruction.
-if(player_state == state.normal)
-{
-    // Moved code to parent fighter
-}
-else
-{
-    mp_potential_settings(60, 30, 3, true);
-    var reached_goal = mp_potential_step(goal_x, goal_y, default_speed, false);
-    if(reached_goal){
-        player_state = state.normal;}
-}
-
-// Check if player is too close to the border
-if(place_meeting(x, y, obj_boundary))
-{
-    on_border = true;
-}
-else if(on_border)
-{
-    on_border = false
-}
-
-// Set the timer to blow up if player continues being on border
-if(on_border &amp;&amp; alarm[2] == -1)
-{
-    alarm[2] = TIME_TILL_DEATH;
-}
-
 // Gatling gun logic
 if(gun_heat &gt; 0 &amp;&amp; !is_shooting)
 {
@@ -477,88 +424,6 @@ if(other.hp &lt;= 0)
         </arguments>
       </action>
     </event>
-    <event eventtype="7" enumb="7">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>is_dodging = false;
-image_speed = 0;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="7" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>player_state = state.outside;
-goal_x = xprevious;
-goal_y = yprevious;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="8" enumb="64">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>if(on_border)
-{
-    // Display warning to player
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_text(view_wview[0]/2, view_hview[0]/2, "Return to the field of battle, pilot");
-    draw_text(view_wview[0]/2, view_hview[0]/2 + 20, string(alarm[2]));
-}
-
-draw_text(20, 500, "Stick X: " + string(-inputdog_analog("left", 1)+inputdog_analog("right", 1)) + " Y: " + string(-inputdog_analog("down", 1) + inputdog_analog("up", 1)));
-draw_text(20, 520, "Turn Ratio: " + string(turn_ratio));
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
@@ -582,21 +447,8 @@ draw_line_width_colour(x, y,
     lengthdir_y(view_wview[player_slot - 1], direction) + y,
     5, c_red, c_orange);
     
-draw_triangle_colour(x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y, 
-    c_red, c_green, c_green, false);
-   
-if(target != noone)
-{ 
-    if(!instance_exists(target))
-    {
-        target = noone;
-    }
-    else
-    {
-        draw_sprite(spr_player_missile_reticle, 0, 
-            predict_crosshair[? "x"], predict_crosshair[? "y"]);
-    }
-}
+//draw_triangle_colour(x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y, 
+//    c_red, c_green, c_green, false);
 </string>
           </argument>
         </arguments>
@@ -614,36 +466,6 @@ if(target != noone)
         <whoName>self</whoName>
         <relative>0</relative>
         <isnot>0</isnot>
-      </action>
-    </event>
-    <event eventtype="9" enumb="67">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>if(missile_locked_on)
-{
-    var missile = instance_create(x, y, obj_player_missile);
-    missile.target = missile_target;
-    missile.launcher = id;
-    missile.spd = speed;
-    missile.direction = direction;
-}
-</string>
-          </argument>
-        </arguments>
       </action>
     </event>
   </events>
