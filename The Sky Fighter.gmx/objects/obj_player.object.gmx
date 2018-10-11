@@ -77,8 +77,9 @@ SCAN_CONE_ANGLE = 15;
 SCAN_SIDE_LENGTH = SCAN_CONE_LENGTH / cos(degtorad(SCAN_CONE_ANGLE));
 LOCK_ON_TIME = room_speed * 0.5;
 
-// Border of field constants
-TIME_TILL_DEATH = 5 * room_speed;
+// Respawn constants
+RESPAWN_TIME = 2;
+RESPAWN_TIMER_ALARM = 1;
 
 // Goal coordinates for when player leaves play field
 goal_x = 0;
@@ -114,6 +115,7 @@ target = noone;
 predict_crosshair = ds_map_create();
 
 player_slot = 1;
+num_lives = PLAYER_INITIAL_LIVES;
 var cruise_sound = audio_play_sound(snd_player_cruising, 9, true);
 audio_sound_gain(cruise_sound, 0.25, 0);
 
@@ -163,6 +165,31 @@ default_speed = PLAYER_DEFAULT_SPEED;
             <kind>1</kind>
             <string>sound_stop(snd_player_cruising);
 ds_map_destroy(predict_crosshair);
+global.player_lives--;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Restart the game
+room_restart();
 </string>
           </argument>
         </arguments>
@@ -185,7 +212,19 @@ ds_map_destroy(predict_crosshair);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>can_dodge = true;
+            <string>/// Respawn the player
+// Choose a random spawn point to teleport to
+var spawn_point_instance = random_range(1, instance_number(obj_player_spawn_point));
+var spawn_point = instance_find(obj_player_spawn_point, spawn_point_instance);
+x = spawn_point.x;
+y = spawn_point.y;
+
+// Set the player back to a normal state
+visible = true;
+speed = PLAYER_DEFAULT_SPEED;
+direction = spawn_point.direction;
+hp = PLAYER_STARTING_HEALTH;
+player_state = state.normal;
 </string>
           </argument>
         </arguments>
@@ -208,81 +247,104 @@ ds_map_destroy(predict_crosshair);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Check inputs
-// Check directional inputs
-if(!is_dodging)
+            <string>/// Check health and inputs
+// Check health
+if(hp &lt;= 0 and player_state == state.normal)
 {
-    turn_ratio = inputdog_analog("left", player_slot) - inputdog_analog("right", player_slot);
-}
-
-// Check face buttons
-if(inputdog_down("gun", player_slot))
-{
-    if(can_shoot &amp;&amp; !forced_cooldown)
-    {
-        var bullet = instance_create(x, y, obj_player_bullet);
-        with(bullet)
-        {
-            speed = other.PLAYER_BULLET_SPEED;
-            direction = other.direction;
-            image_angle = other.image_angle;
-            player_slot = other.player_slot;
-        }
-        alarm[0] = PLAYER_BULLET_INTERVAL;
-        can_shoot = false;
-        is_shooting = true;
-        gun_heat += PLAYER_GUN_HEAT_INCREMENT;
-        
-        if(gun_heat == PLAYER_MAX_GUN_HEAT)
-        {
-            is_shooting = false;
-            forced_cooldown = true;
-        }
-    }
-}
-
-if(inputdog_down("afterburner", player_slot))
-{
-    afterburner = true;
+    // Make the player invisible, set the state to dead
+    // set a timer to wait to teleport the player to a 
+    // spawn point
+    visible = false;
+    player_state = state.dead;
+    speed = 0;
     
-    if(speed &lt; PLAYER_AFTERBURNER_SPEED){
-        speed += PLAYER_AFTERBURNER_INCREMENT;}
-}
-
-/*if(inputdog_down("b", player_slot))
-{
-    if(can_dodge)
+    // Decrease lives by one and begin the respawn process
+    if(num_lives-- &gt; 0)
     {
-        can_dodge = false;
-        // Start dodge animation
-        image_speed = 1;
-        is_dodging = true;
-    }
-}*/
-
-if(inputdog_pressed("target", player_slot))
-{
-    // Acquire a target. Pick nearest enemy. 
-    // If a target is already set, then unset 
-    // the target
-    if(target == noone)
-    {
-        target = instance_nearest(x, y, obj_enemy);
+        alarm[RESPAWN_TIMER_ALARM] = RESPAWN_TIME * room_speed;
     }
     else
     {
-        target = noone;
+        // End the game
+        alarm[2] = 2 * room_speed;
     }
 }
-
-// Check for input releases
-if(inputdog_released("left", player_slot) || inputdog_released("right", player_slot)){
-    turn_ratio = 0;}
-if(inputdog_released("gun", player_slot)){
-    is_shooting = false;}
-if(inputdog_released("afterburner", player_slot)){
-    afterburner = false;}
-
+else
+{
+    // Check directional inputs
+    if(!is_dodging)
+    {
+        turn_ratio = inputdog_analog("left", player_slot) - inputdog_analog("right", player_slot);
+    }
+    
+    // Check face buttons
+    if(inputdog_down("gun", player_slot))
+    {
+        if(can_shoot &amp;&amp; !forced_cooldown)
+        {
+            var bullet = instance_create(x, y, obj_player_bullet);
+            with(bullet)
+            {
+                speed = other.PLAYER_BULLET_SPEED;
+                direction = other.direction;
+                image_angle = other.image_angle;
+                player_slot = other.player_slot;
+            }
+            alarm[BULLET_INTERVAL_ALARM] = PLAYER_BULLET_INTERVAL;
+            can_shoot = false;
+            is_shooting = true;
+            gun_heat += PLAYER_GUN_HEAT_INCREMENT;
+            
+            if(gun_heat == PLAYER_MAX_GUN_HEAT)
+            {
+                is_shooting = false;
+                forced_cooldown = true;
+            }
+        }
+    }
+    
+    if(inputdog_down("afterburner", player_slot))
+    {
+        afterburner = true;
+        
+        if(speed &lt; PLAYER_AFTERBURNER_SPEED){
+            speed += PLAYER_AFTERBURNER_INCREMENT;}
+    }
+    
+    /*if(inputdog_down("b", player_slot))
+    {
+        if(can_dodge)
+        {
+            can_dodge = false;
+            // Start dodge animation
+            image_speed = 1;
+            is_dodging = true;
+        }
+    }*/
+    
+    if(inputdog_pressed("target", player_slot))
+    {
+        // Acquire a target. Pick nearest enemy. 
+        // If a target is already set, then unset 
+        // the target
+        if(target == noone)
+        {
+            target = instance_nearest(x, y, obj_enemy);
+        }
+        else
+        {
+            target = noone;
+        }
+    }
+    
+    // Check for input releases
+    if(inputdog_released("left", player_slot) || inputdog_released("right", player_slot)){
+        turn_ratio = 0;}
+    if(inputdog_released("gun", player_slot)){
+        is_shooting = false;}
+    if(inputdog_released("afterburner", player_slot)){
+        afterburner = false;}
+}
 </string>
           </argument>
         </arguments>
@@ -319,75 +381,78 @@ if(inputdog_released("afterburner", player_slot)){
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Change view coordinates for player
-view_xview[player_slot - 1] = clamp(x - view_wview[player_slot - 1] / 2, 0, room_width - view_wview[player_slot - 1]);
-view_yview[player_slot - 1] = clamp(y - view_hview[player_slot - 1] / 2, 0, room_height - view_hview[player_slot - 1]);
-//view_angle[player_slot - 1] = 90 - direction;
-
-// Gatling gun logic
-if(gun_heat &gt; 0 &amp;&amp; !is_shooting)
+            <string>if(player_state == state.normal)
 {
-    if(forced_cooldown)
+    // Change view coordinates for player
+    view_xview[player_slot - 1] = clamp(x - view_wview[player_slot - 1] / 2, 0, room_width - view_wview[player_slot - 1]);
+    view_yview[player_slot - 1] = clamp(y - view_hview[player_slot - 1] / 2, 0, room_height - view_hview[player_slot - 1]);
+    //view_angle[player_slot - 1] = 90 - direction;
+    
+    // Gatling gun logic
+    if(gun_heat &gt; 0 &amp;&amp; !is_shooting)
     {
-        gun_heat -=  0.25 * PLAYER_GUN_COOLDOWN;
-        if(gun_heat == 0){
-            forced_cooldown = false}
+        if(forced_cooldown)
+        {
+            gun_heat -=  0.25 * PLAYER_GUN_COOLDOWN;
+            if(gun_heat == 0){
+                forced_cooldown = false}
+        }
+        else
+        {
+            gun_heat -= PLAYER_GUN_COOLDOWN;
+        }
+    }
+    
+    // Missile launcher logic
+    // Get coordinates for missile scanning cone
+    corner_1_x = x + lengthdir_x(SCAN_SIDE_LENGTH, direction - SCAN_CONE_ANGLE);
+    corner_2_x = x + lengthdir_x(SCAN_SIDE_LENGTH, direction + SCAN_CONE_ANGLE);
+    
+    corner_1_y = y + lengthdir_y(SCAN_SIDE_LENGTH, direction - SCAN_CONE_ANGLE);
+    corner_2_y = y + lengthdir_y(SCAN_SIDE_LENGTH, direction + SCAN_CONE_ANGLE);
+    
+    // Bullet aim prediction logic
+    // Create a narrow triangle that is as long as the diagonal of the view rectangle
+    var triangle_length = sqrt(power(view_wview[0], 2) + power(view_hview[0], 2));
+    
+    if(target != noone)
+    {
+        var target_distance = distance_to_point(target.x, target.y);
+        var steps_to_target = ceil(target_distance / PLAYER_BULLET_SPEED);
+        var reticle_dist = target.spd * steps_to_target;
+        
+        predict_crosshair[? "x"] = target.x + lengthdir_x(reticle_dist, target.direction);
+        predict_crosshair[? "y"] = target.y + lengthdir_y(reticle_dist, target.direction);
+    }
+    
+    /*if(missile_target)
+    {
+       var in_range = point_in_triangle(missile_target.x, missile_target.y, 
+            x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y);
+       if(in_range &amp;&amp; lock_on_timer &gt; 0){
+            lock_on_timer--;}
+       else if(lock_on_timer == 0){
+            missile_locked_on = true;}
+       else
+       {
+            missile_target = 0;
+            lock_on_timer = LOCK_ON_TIME;
+       }
     }
     else
     {
-        gun_heat -= PLAYER_GUN_COOLDOWN;
-    }
+        for (var i = 0; i &lt; instance_number(obj_enemy); i++)
+        {
+           var fighter = instance_find(obj_enemy, i);
+           var in_range = point_in_triangle(fighter.x, fighter.y, 
+                x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y);
+           if(in_range)
+           {
+                missile_target = fighter;
+           }
+        }
+    }*/
 }
-
-// Missile launcher logic
-// Get coordinates for missile scanning cone
-corner_1_x = x + lengthdir_x(SCAN_SIDE_LENGTH, direction - SCAN_CONE_ANGLE);
-corner_2_x = x + lengthdir_x(SCAN_SIDE_LENGTH, direction + SCAN_CONE_ANGLE);
-
-corner_1_y = y + lengthdir_y(SCAN_SIDE_LENGTH, direction - SCAN_CONE_ANGLE);
-corner_2_y = y + lengthdir_y(SCAN_SIDE_LENGTH, direction + SCAN_CONE_ANGLE);
-
-// Bullet aim prediction logic
-// Create a narrow triangle that is as long as the diagonal of the view rectangle
-var triangle_length = sqrt(power(view_wview[0], 2) + power(view_hview[0], 2));
-
-if(target != noone)
-{
-    var target_distance = distance_to_point(target.x, target.y);
-    var steps_to_target = ceil(target_distance / PLAYER_BULLET_SPEED);
-    var reticle_dist = target.spd * steps_to_target;
-    
-    predict_crosshair[? "x"] = target.x + lengthdir_x(reticle_dist, target.direction);
-    predict_crosshair[? "y"] = target.y + lengthdir_y(reticle_dist, target.direction);
-}
-
-/*if(missile_target)
-{
-   var in_range = point_in_triangle(missile_target.x, missile_target.y, 
-        x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y);
-   if(in_range &amp;&amp; lock_on_timer &gt; 0){
-        lock_on_timer--;}
-   else if(lock_on_timer == 0){
-        missile_locked_on = true;}
-   else
-   {
-        missile_target = 0;
-        lock_on_timer = LOCK_ON_TIME;
-   }
-}
-else
-{
-    for (var i = 0; i &lt; instance_number(obj_enemy); i++)
-    {
-       var fighter = instance_find(obj_enemy, i);
-       var in_range = point_in_triangle(fighter.x, fighter.y, 
-            x, y, corner_1_x, corner_1_y, corner_2_x, corner_2_y);
-       if(in_range)
-       {
-            missile_target = fighter;
-       }
-    }
-}*/
 </string>
           </argument>
         </arguments>
@@ -410,15 +475,47 @@ else
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>var collision_dmg = PLAYER_STARTING_HEALTH / 4;
-
-other.hp -= collision_dmg;
-hp -= collision_dmg;
-
-if(other.hp &lt;= 0)
+            <string>if(player_state == state.normal)
 {
-    global.scores[? string(player_slot)] += other.point_worth;
+    var collision_dmg = PLAYER_STARTING_HEALTH / 4;
+    
+    other.hp -= collision_dmg;
+    hp -= collision_dmg;
+    
+    if(other.hp &lt;= 0)
+    {
+        global.scores[? string(player_slot)] += other.point_worth;
+    }
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="64">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>draw_set_alpha(1);
+draw_set_colour(c_black);
+draw_rectangle(20, 500, 120, 540, false);
+draw_set_colour(c_white);
+draw_text(20, 500, string(player_state));
+draw_text(20, 520, string(num_lives));
+
 </string>
           </argument>
         </arguments>

@@ -13,6 +13,12 @@
     <sound>sound\music_test</sound>
   </sounds>
   <sprites name="sprites">
+    <sprites name="Tiles">
+      <sprite>sprites\spr_border</sprite>
+    </sprites>
+    <sprites name="Background">
+      <sprite>sprites\spr_mountain1</sprite>
+    </sprites>
     <sprites name="Weapons">
       <sprites name="Player Weapons">
         <sprite>sprites\spr_player_bullet</sprite>
@@ -57,9 +63,7 @@
     </sprites>
     <sprite>sprites\mask_location</sprite>
     <sprite>sprites\mask_collidable</sprite>
-    <sprites name="Background">
-      <sprite>sprites\spr_mountain1</sprite>
-    </sprites>
+    <sprite>sprites\mask_spawn_point</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_desert1</background>
@@ -132,6 +136,7 @@
     <script>scripts\scr_generate_cloud.gml</script>
     <script>scripts\log.gml</script>
     <script>scripts\mp_fighter_step.gml</script>
+    <script>scripts\scr_predictive_goal.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\major_snafu</font>
@@ -224,6 +229,9 @@
       <object>objects\obj_cloud</object>
     </objects>
     <object>objects\obj_collidable</object>
+    <objects name="Invisible">
+      <object>objects\obj_player_spawn_point</object>
+    </objects>
   </objects>
   <rooms name="rooms">
     <room>rooms\r_init</room>
@@ -241,7 +249,8 @@
       <room>rooms\r_level_results</room>
     </rooms>
   </rooms>
-  <constants number="16">
+  <constants number="17">
+    <constant name="PLAYER_INITIAL_LIVES">3</constant>
     <constant name="UI_WIDTH">1920</constant>
     <constant name="MP_GRID_CELL_SIZE">64</constant>
     <constant name="CLOUD_OVER_DEPTH">-6</constant>

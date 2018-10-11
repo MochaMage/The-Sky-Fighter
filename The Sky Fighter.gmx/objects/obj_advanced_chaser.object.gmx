@@ -55,23 +55,17 @@ POINT_WORTH = 75;
 hp = 50;
 turn_angle = 0;
 spd = CHASER_SPEED;
-chaser_state = state.scanning;
 point_worth = POINT_WORTH;
 max_turn_angle = MAX_TURN_ANGLE;
 turn_decrement = TURN_DECREMENT;
 turn_increment = TURN_INCREMENT;
-spd = CHASER_SPEED;
 to_string = "Advanced Chaser";
-goal_x = 0;
-goal_y = 0;
 
 // Create an invisible object to plan out the path with no obstacles to follow a number of pixels ahead 
 min_distance = MP_GRID_CELL_SIZE * 1.25;
 max_distance = MP_GRID_CELL_SIZE * 1.5;
 pathfinder = instance_create(x + 2 * lengthdir_x(max_distance, direction), y + 2 * lengthdir_y(max_distance, direction), obj_pathfinder);
 pathfinder.follower = id;
-    
-get_new_scan_location();
 </string>
           </argument>
         </arguments>
@@ -134,7 +128,7 @@ instance_destroy(pathfinder);
             <kind>1</kind>
             <string>if(instance_exists(pathfinder))
 {
-    if(can_shoot &amp;&amp; chaser_state == state.chasing)
+    if(pathfinder.scan_result != noone &amp;&amp; can_shoot)
     {
         var bullet_speed = CHASER_BULLET_SPEED + speed;
         var will_hit = scr_shot_prediction(x, y, direction, bullet_speed,
@@ -154,7 +148,13 @@ instance_destroy(pathfinder);
             can_shoot = false;
         }
     }
-    mp_potential_settings(3.5, 1.75, 30, false);
+    var allow_onspot = false
+    if(x == xprevious)
+    {
+        allow_onspot = true;
+    }
+        
+    mp_potential_settings(3.5, 1.75, 30, allow_onspot);
     mp_potential_step(pathfinder.x, pathfinder.y, spd, false);
 }
 </string>

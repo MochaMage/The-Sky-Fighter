@@ -5,7 +5,7 @@
   <visible>-1</visible>
   <depth>0</depth>
   <persistent>0</persistent>
-  <parentName>self</parentName>
+  <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
     <event eventtype="0" enumb="0">
@@ -25,7 +25,10 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Identifier
+            <string>// Alarm constants
+BULLET_INTERVAL_ALARM = 0;
+
+// Identifier
 to_string = "";
 
 //Constants for all
@@ -52,7 +55,7 @@ turn_decrement = 0;
 default_speed = 0;
 depth = BATTLE_ACTOR_DEPTH;
 
-enum state {normal, outside, chasing, scanning};
+enum state {normal, outside, chasing, scanning, dead};
 </string>
           </argument>
         </arguments>
@@ -84,7 +87,7 @@ enum state {normal, outside, chasing, scanning};
         </arguments>
       </action>
     </event>
-    <event eventtype="3" enumb="0">
+    <event eventtype="3" enumb="1">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -104,11 +107,30 @@ enum state {normal, outside, chasing, scanning};
             <string>if(hp &lt;= 0)
 {
     instance_create(x, y, obj_fighter_explosion);
-    instance_destroy();
-    exit;
 }
-
-if(turn_ratio &gt; 0)
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if(turn_ratio &gt; 0)
 {
     if(turn_angle &lt; turn_ratio * max_turn_angle){
         turn_angle += turn_increment;}
@@ -140,6 +162,30 @@ else
     
 direction_previous = direction;
 image_angle = direction;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_boundary">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Kill the fighter
+hp = 0;
 </string>
           </argument>
         </arguments>

@@ -29,11 +29,17 @@
 SCAN_RADIUS = 500;
 
 path_holder = path_add();
+path_set_kind(path_holder, 1);
+path_set_precision(path_holder, 6);
 path_result = false;
 scan_result = noone;
 
 goal_x = 0;
 goal_y = 0;
+
+chaser_state = state.scanning;
+get_new_scan_location();
+path_result = mp_grid_path(global.grid, path_holder, x, y, goal_x, goal_y, true);
 </string>
           </argument>
         </arguments>
@@ -80,31 +86,28 @@ path_delete(path_holder);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>scan_result = collision_circle(x, y, SCAN_RADIUS, obj_player, false, true);
+            <string>scan_result = collision_circle(follower.x, follower.y, SCAN_RADIUS, obj_player, false, true);
+path_result = false;
 
 if(scan_result != noone)
 {
-    if(follower.chaser_state == state.scanning){
-        follower.chaser_state = state.chasing}
-        
-    goal_x = scan_result.x;
-    goal_y = scan_result.y;
-}
-else
-{
-    var goal_distance = distance_to_point(goal_x, goal_y);
-    
-    if(follower.chaser_state == state.chasing || path_result == false || goal_distance &lt;= GOAL_PROXIMITY)
+    predicted_goal = scr_predictive_goal(scan_result, follower.CHASER_BULLET_SPEED + follower.speed);
+    path_result =  mp_grid_path(global.grid, path_holder, x, y, goal_x, goal_y, true);
+    if(path_result)
     {
-        follower.chaser_state = state.scanning;
-        get_new_scan_location();
-    }  
+        path_start(path_holder, follower.spd, path_action_reverse, true);
+    }
 }
 
-path_result = mp_grid_path(global.grid, path_holder, x, y, goal_x, goal_y, true);
-path_set_kind(path_holder, 1);
-path_set_precision(path_holder, 6);
-path_start(path_holder, follower.spd * 1.5, path_action_stop, true);
+if(!path_result)
+{
+    if(path_index == -1 ||  path_position &gt; .9)
+    {
+        get_new_scan_location();
+        path_result = mp_grid_path(global.grid, path_holder, x, y, goal_x, goal_y, true);
+        path_start(path_holder, follower.spd, path_action_reverse, true);
+    }
+}
 
 if(distance_to_object(follower) &gt;= follower.max_distance)
 {
@@ -118,6 +121,29 @@ else
 {
     path_speed = follower.spd;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="76">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var thing = 0;
 </string>
           </argument>
         </arguments>

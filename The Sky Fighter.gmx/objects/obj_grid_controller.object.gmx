@@ -2,7 +2,7 @@
 <object>
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
-  <visible>-1</visible>
+  <visible>0</visible>
   <depth>200000</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
@@ -124,7 +124,7 @@ instance_destroy(id);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//mp_grid_draw(global.grid);
+            <string>mp_grid_draw(global.grid);
 </string>
           </argument>
         </arguments>
